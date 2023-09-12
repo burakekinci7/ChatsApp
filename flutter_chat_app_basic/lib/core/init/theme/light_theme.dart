@@ -12,5 +12,7 @@ ThemeData lightTheme = ThemeData(
     background: ColorCustom.first,
     primary: ColorCustom.thirth,
     secondary: ColorCustom.forth,
+    surface: ColorCustom.seconds,
+    tertiary: Colors.black,
   ),
 );

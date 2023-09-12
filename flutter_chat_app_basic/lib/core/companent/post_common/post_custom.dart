@@ -73,6 +73,7 @@ class _PostCustomState extends State<PostCustom> {
       builder: (context) => AlertDialog(
         title: Text('Add Commennt'),
         content: TextField(
+          autofocus: true,
           controller: _commentController,
           decoration: InputDecoration(hintText: 'Write a  commnet'),
         ),
@@ -86,8 +87,8 @@ class _PostCustomState extends State<PostCustom> {
                 }
               },
               child: Text(
-                'Okey',
-                style: TextStyle(color: Colors.amber),
+                'OKEY',
+                style: TextStyle(color: Theme.of(context).colorScheme.tertiary),
               )),
           TextButton(
               onPressed: () {
@@ -128,44 +129,28 @@ class _PostCustomState extends State<PostCustom> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.primary,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(10),
       ),
-      margin: EdgeInsets.all(25),
+      margin: EdgeInsets.only(right: 10, left: 10, top: 5, bottom: 5),
       padding: EdgeInsets.all(25),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          //like count
-          const SizedBox(width: 20),
-          //email and message
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Text(
-                    '${widget.user} * ',
-                  ),
-                  Text(
-                    widget.time,
-                  ),
-                  if (widget.user == currentUser.email)
-                    PostDelete(onPressed: deletePost)
-                ],
-              ),
-              Text(
-                widget.message,
-                style: TextStyle(color: Colors.white, fontSize: 18),
-              ),
-            ],
-          ),
+          //email and date and delete
+          emailDateDelete(),
           //liked button
           Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              //fav button and count
+              //comment button
               Column(
+                children: [
+                  CommentButton(onPressed: showCommentDialog),
+                ],
+              ),
+              //fav button and count
+              Row(
                 children: [
                   FavButton(
                     isLiked: isLiked,
@@ -174,16 +159,9 @@ class _PostCustomState extends State<PostCustom> {
                   Text(widget.likes.length.toString()),
                 ],
               ),
-              //comment button and count
-              Column(
-                children: [
-                  CommentButton(onPressed: showCommentDialog),
-                  Text(widget.likes.length.toString()),
-                ],
-              ),
             ],
           ),
-          //comment strean
+          //comment stream
           StreamBuilder(
             stream: FirebaseFirestore.instance
                 .collection('User Posts')
@@ -212,6 +190,30 @@ class _PostCustomState extends State<PostCustom> {
           )
         ],
       ),
+    );
+  }
+
+  Column emailDateDelete() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Text(
+              '${widget.user} * ',
+            ),
+            Text(
+              widget.time,
+            ),
+            if (widget.user == currentUser.email)
+              PostDelete(onPressed: deletePost)
+          ],
+        ),
+        Text(
+          widget.message,
+          style: TextStyle(color: Colors.white, fontSize: 18),
+        ),
+      ],
     );
   }
 }

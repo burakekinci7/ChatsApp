@@ -16,9 +16,19 @@ For help getting started with Flutter development, view the
 samples, guidance on mobile development, and a full API reference.
 
 D:\as\jbr\bin\java
+# TO DO
+- routers
+- languege(localization)
+- add Photo
 
-google sign in initilaize
-    //Add main if you haven't already
+# Current package and 
+- Firebase
+- remote config, crashylitcs, analytics, performance, event, firestore, auth, storage, admob, notification;
+- dark and light theme
+- state management PROVİDER
+
+# google sign in initilaize
+-   Add main if you haven't already
     add main.dart-> WidgetsFlutterBinding.ensureInitialized();
     firebase google enabled
     firebase add sha-1 and sha-256 

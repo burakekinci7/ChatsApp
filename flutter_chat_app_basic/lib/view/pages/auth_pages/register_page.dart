@@ -34,17 +34,13 @@ class _RegisterPageState extends State<RegisterPage> {
 
     //create new user
     if (emailController.text.isNotEmpty && passwordController.text.isNotEmpty) {
-      try {
-        //create the user
-        UserCredential userCredential =
-            await authService.createUserEmailAndPass(
-                emailController.text, passwordController.text);
-        //after creating the user, create a new document in cloud firestore called user
+      //create the user
+      UserCredential? userCredential = await authService.createUserEmailAndPass(
+          emailController.text, passwordController.text, context);
+      //after creating the user, create a new document in cloud firestore called user
+      if (userCredential != null) {
         authService.saveToUserName(
             userCredential.user!.uid, emailController.text);
-      } on FirebaseAuth catch (e) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(e.toString())));
       }
     } else {
       ScaffoldMessenger.of(context)
@@ -64,7 +60,7 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -77,35 +73,43 @@ class _RegisterPageState extends State<RegisterPage> {
                   Icon(
                     IconCustomConst.chatIcon,
                     size: 80,
-                    color: Colors.grey[800],
+                    color: Theme.of(context).colorScheme.tertiary,
                   ),
                   SizedBox(height: 50),
 
                   //create account message
                   Text(AppTitle.createAccount,
-                      style: Theme.of(context).textTheme.titleLarge),
+                      style: TextStyle(
+                        fontSize: 21,
+                        color: Theme.of(context).colorScheme.tertiary,
+                      )),
                   SizedBox(height: 50),
 
                   //email textfield
                   TextFieldCustom(
                       controller: emailController,
                       hintText: 'email',
-                      obscureText: false),
-                  SizedBox(height: 20),
+                      obscureText: false,
+                      isEndTextField: false,
+                      textInputType: TextInputType.emailAddress),
 
                   //password textfield
                   TextFieldCustom(
-                      controller: passwordController,
-                      hintText: 'Password',
-                      obscureText: true),
-                  SizedBox(height: 20),
+                    controller: passwordController,
+                    hintText: 'Password',
+                    obscureText: true,
+                    isEndTextField: false,
+                    textInputType: TextInputType.multiline,
+                  ),
 
                   //password confirm textfield
                   TextFieldCustom(
-                      controller: confirmPasswordController,
-                      hintText: 'Confirm Password',
-                      obscureText: true),
-                  SizedBox(height: 20),
+                    controller: confirmPasswordController,
+                    hintText: 'Confirm Password',
+                    obscureText: true,
+                    isEndTextField: true,
+                    textInputType: TextInputType.text,
+                  ),
 
                   //sign up button
                   ButtonCustom(ontap: signUp, text: 'Sign Up'),
@@ -116,13 +120,15 @@ class _RegisterPageState extends State<RegisterPage> {
                     children: [
                       Text('Already a member?'),
                       TextButton(
-                          onPressed: widget.ontap,
-                          child: Text(
-                            'Login Now',
-                            style: TextStyle(color: Colors.black),
-                          ))
+                        onPressed: widget.ontap,
+                        child: Text(
+                          'Login Now',
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.tertiary),
+                        ),
+                      ),
                     ],
-                  )
+                  ),
                 ],
               ),
             ),

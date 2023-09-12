@@ -9,16 +9,19 @@ class ButtonCustom extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: ontap,
-      
       child: Container(
-        padding: EdgeInsets.all(22),
+        padding: const EdgeInsets.all(22),
         decoration: BoxDecoration(
-            color: Colors.black, borderRadius: BorderRadius.circular(10)),
+          color: Theme.of(context).colorScheme.tertiary,
+          borderRadius: BorderRadius.circular(10),
+        ),
         child: Center(
           child: Text(
             text,
             style: TextStyle(
-                color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+                color: Theme.of(context).colorScheme.background,
+                fontWeight: FontWeight.bold,
+                fontSize: 16),
           ),
         ),
       ),

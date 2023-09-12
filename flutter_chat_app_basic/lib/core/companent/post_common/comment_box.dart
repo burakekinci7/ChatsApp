@@ -10,24 +10,29 @@ class CommentBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
+      padding: const EdgeInsets.symmetric(vertical: 3),
       child: Container(
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.secondary,
-          borderRadius: BorderRadius.circular(6),
+          borderRadius: BorderRadius.circular(2),
         ),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(
-            'Commets',
-            style: TextStyle(
-                fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white),
-          ),
-          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            Text(user),
-            const Text('*'),
+          Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+            Text(
+              user,
+              style:
+                  TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+            ),
+            const Text('  *  '),
             Text(time),
           ]),
-          Text(text),
+          Padding(
+            padding: const EdgeInsets.only(left: 5, bottom: 3),
+            child: Text(
+              text,
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
         ]),
       ),
     );

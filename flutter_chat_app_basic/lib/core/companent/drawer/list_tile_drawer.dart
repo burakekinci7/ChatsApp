@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class ListTileCustom extends StatelessWidget {
   final String text;
-  final IconData icon;
+  final Icon icon;
   final VoidCallback onTap;
   const ListTileCustom(
       {super.key, required this.text, required this.icon, required this.onTap});
@@ -13,9 +13,7 @@ class ListTileCustom extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: ListTile(
         onTap: onTap,
-        leading: Icon(
-          icon,
-        ),
+        leading: icon,
         title: Text(
           text,
         ),

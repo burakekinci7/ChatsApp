@@ -11,8 +11,8 @@ class AuthService extends ChangeNotifier {
   final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
 
   //sign in user
-  Future<UserCredential> signInWithEmailAndPassworddd(
-      String email, String password) async {
+  Future<UserCredential?> signInWithEmailAndPassworddd(
+      String email, String password, BuildContext context) async {
     try {
       //sign in
       UserCredential userCredential = await _firebaseAuth
@@ -26,14 +26,20 @@ class AuthService extends ChangeNotifier {
 
       return userCredential;
     } on FirebaseAuthException catch (e) {
-      //catch any error
-      throw Exception(e.code);
+      if (e.code == 'user-not-found') {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('No user found for that email.')));
+      } else if (e.code == 'wrong-password') {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Wrong password provided for that user.')));
+      }
     }
+    return null;
   }
 
   //create a new user in email
-  Future<UserCredential> createUserEmailAndPass(
-      String email, String password) async {
+  Future<UserCredential?> createUserEmailAndPass(
+      String email, String password, BuildContext context) async {
     try {
       final userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
           email: email, password: password);
@@ -45,9 +51,21 @@ class AuthService extends ChangeNotifier {
       });
 
       return userCredential;
-    } catch (e) {
-      throw Exception(e);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        print('The password provided is too weak.');
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Güçsüz şifre')));
+      } else if (e.code == 'email-already-in-use') {
+        print('The account already exists for that email.');
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Kullanıcı mevcut')));
+      } else {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Hata tekrar deneyiniz')));
+      }
     }
+    return null;
     //not notifyListeners(), because return UserCredential.
   }
 
@@ -87,6 +105,9 @@ class AuthService extends ChangeNotifier {
         "uid": userCredential.user!.uid,
         "email": userCredential.user!.email,
       });
+
+      saveToUserName(userCredential.user!.uid,
+          userCredential.user!.email ?? 'Empty user Name');
       // Firebase kullanıcısını döndürün.
       return userCredential.user;
     } catch (e) {
@@ -103,7 +124,7 @@ class AuthService extends ChangeNotifier {
         'bio': 'Empty bio.',
       }, SetOptions(merge: true));
     } catch (e) {
-      rethrow;
+      print('object');
     }
     notifyListeners();
   }

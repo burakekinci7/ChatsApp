@@ -4,21 +4,15 @@ import 'package:flutter_chat_app_basic/core/init/main_init.dart';
 import 'package:flutter_chat_app_basic/core/init/theme/dark_theme.dart';
 import 'package:flutter_chat_app_basic/core/init/theme/light_theme.dart';
 import 'package:flutter_chat_app_basic/core/services/auth/auth_gate.dart';
-import 'package:flutter_chat_app_basic/core/services/auth/auth_services.dart';
-import 'package:flutter_chat_app_basic/core/services/chat/chat_service.dart';
-import 'package:flutter_chat_app_basic/core/services/post/post_services.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
-  await InitMain.initMain();
+  await InitMain.instance.initMain();
+  await InitMain.instance.initNotification();
+
   runApp(
     MultiProvider(
-      providers: [
-        ChangeNotifierProvider<AuthService>(create: (context) => AuthService()),
-        ChangeNotifierProvider<ChatServices>(
-            create: (context) => ChatServices()),
-        ChangeNotifierProvider<PostService>(create: (context) => PostService()),
-      ],
+      providers: InitMain.instance.porivderList(),
       child: const MyApp(),
     ),
   );
@@ -30,8 +24,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: AppTitle.appTitle,
-      theme: darkTheme,
+      theme: lightTheme,
       darkTheme: darkTheme,
       home: const Authgate(),
     );

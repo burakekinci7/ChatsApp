@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_app_basic/core/companent/button_custom.dart';
 import 'package:flutter_chat_app_basic/core/companent/text_field_custom.dart';
@@ -26,8 +27,8 @@ class _LoginPageState extends State<LoginPage> {
     if (emailController.text.isNotEmpty && passwordController.text.isNotEmpty) {
       try {
         await authServices.signInWithEmailAndPassworddd(
-            emailController.text, passwordController.text);
-      } catch (e) {
+            emailController.text, passwordController.text, context);
+      } on FirebaseAuthException catch (e) {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text(e.toString())));
       }
@@ -48,7 +49,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     final authServis = context.read<AuthService>();
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -62,27 +63,35 @@ class _LoginPageState extends State<LoginPage> {
                   Icon(
                     IconCustomConst.chatIcon,
                     size: 80,
-                    color: Colors.grey[800],
+                    color: Theme.of(context).colorScheme.tertiary,
                   ),
                   SizedBox(height: 50),
                   //welcome back message
-                  Text(AppTitle.welcomeback,
-                      style: Theme.of(context).textTheme.titleLarge),
+                  Text(
+                    AppTitle.welcomeback,
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.tertiary,
+                        fontSize: 20),
+                  ),
                   SizedBox(height: 50),
 
                   //email textfield
                   TextFieldCustom(
-                      controller: emailController,
-                      hintText: 'email',
-                      obscureText: false),
-                  SizedBox(height: 20),
+                    controller: emailController,
+                    hintText: 'Email',
+                    textInputType: TextInputType.emailAddress,
+                    obscureText: false,
+                    isEndTextField: false,
+                  ),
 
                   //password textfield
                   TextFieldCustom(
-                      controller: passwordController,
-                      hintText: 'Password',
-                      obscureText: true),
-                  SizedBox(height: 20),
+                    controller: passwordController,
+                    hintText: 'Password',
+                    obscureText: true,
+                    textInputType: TextInputType.text,
+                    isEndTextField: true,
+                  ),
 
                   //sign in button
                   ButtonCustom(
@@ -91,13 +100,20 @@ class _LoginPageState extends State<LoginPage> {
                     },
                     text: 'Sign In',
                   ),
-                  SizedBox(height: 10),
+                  //Google sign in
                   ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Theme.of(context).colorScheme.tertiary,
+                    ),
                     icon: IconCustomConst.googleSignIn,
                     onPressed: () {
                       authServis.signInWithGoogle();
                     },
-                    label: Text('Google Sigin'),
+                    label: Text(
+                      'Google Sigin',
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.background),
+                    ),
                   ),
                   //not a mamber? create new account. register now
                   Row(
@@ -105,13 +121,15 @@ class _LoginPageState extends State<LoginPage> {
                     children: [
                       const Text(AppTitle.notRemember),
                       TextButton(
-                          onPressed: widget.ontap,
-                          child: const Text(
-                            AppTitle.registerNow,
-                            style: TextStyle(color: Colors.black),
-                          )),
+                        onPressed: widget.ontap,
+                        child: Text(
+                          AppTitle.registerNow,
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.tertiary),
+                        ),
+                      ),
                     ],
-                  )
+                  ),
                 ],
               ),
             ),

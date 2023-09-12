@@ -1,18 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_app_basic/core/companent/drawer/list_tile_drawer.dart';
+import 'package:flutter_chat_app_basic/core/constants/icon_const.dart';
+import 'package:flutter_chat_app_basic/core/services/auth/auth_services.dart';
+import 'package:flutter_chat_app_basic/view/pages/chat_pages/home_page.dart';
+import 'package:flutter_chat_app_basic/view/pages/profile_pages/profile_home_page.dart';
+import 'package:provider/provider.dart';
 
 class DrawerCustom extends StatelessWidget {
-  final VoidCallback onProfileTap;
-  final VoidCallback onSignOut;
-  final VoidCallback chatTap;
-  const DrawerCustom(
-      {super.key,
-      required this.onProfileTap,
-      required this.onSignOut,
-      required this.chatTap});
+  const DrawerCustom({super.key});
 
   @override
   Widget build(BuildContext context) {
+    void goToProfilePage() {
+      //pop the drawer menu
+      Navigator.pop(context);
+
+      //push profile page
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const ProfileHomePage(),
+          ));
+    }
+
+    void goToChatPage() {
+      //pop the drawer menu
+      Navigator.pop(context);
+
+      //push profile page
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const HomePage(),
+          ));
+    }
+
+    void signOut() {
+      //get authservice
+      final authServices = context.read<AuthService>();
+      //signOut
+      authServices.signOut();
+    }
+
     return Drawer(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -27,29 +56,29 @@ class DrawerCustom extends StatelessWidget {
             //home list tile
             ListTileCustom(
               text: 'H O M E ',
-              icon: Icons.home,
+              icon: IconCustomConst.home,
               onTap: () => Navigator.pop(context),
             ),
 
             //profile list tile
             ListTileCustom(
               text: 'P R O F İ L E',
-              icon: Icons.people,
-              onTap: onProfileTap,
+              icon: IconCustomConst.profilePicPerson,
+              onTap: goToProfilePage,
             ),
             //profile list tile
             ListTileCustom(
               text: 'C H A T S',
-              icon: Icons.chat,
-              onTap: chatTap,
+              icon: IconCustomConst.chats,
+              onTap: goToChatPage,
             ),
           ]),
 
           //log out
           ListTileCustom(
             text: 'L O G  O U T',
-            icon: Icons.logout,
-            onTap: onSignOut,
+            icon: IconCustomConst.signOutIcon,
+            onTap: signOut,
           )
         ],
       ),

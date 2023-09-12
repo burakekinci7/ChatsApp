@@ -10,4 +10,6 @@ class IconCustomConst {
   static const Icon settings = Icon(Icons.settings);
   static const Icon comment = Icon(Icons.comment);
   static const Icon delete = Icon(Icons.delete);
+  static const Icon home = Icon(Icons.home);
+  static const Icon chats = Icon(Icons.chat_sharp);
 }
